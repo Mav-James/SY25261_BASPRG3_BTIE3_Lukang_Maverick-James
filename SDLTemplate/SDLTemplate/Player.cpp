@@ -35,6 +35,13 @@ void Player::start()
 	sound = SoundManager::loadSound("sound/334227__jradcoolness__laser.ogg");
 }
 
+void Player::draw()
+{
+	blit(texture, x, y);
+}
+
+
+
 void Player::update()
 {
 	if (app.keyboard[SDL_SCANCODE_LSHIFT])
@@ -79,7 +86,7 @@ void Player::update()
 		Bullet* bullet = new Bullet(x + width, y - 2 + height / 2, 1, 0, 10);
 		bullets.push_back(bullet);
 		getScene()->addGameObject(bullet);
-		bullet->start();
+		
 
 		currentReloadTime = reloadTime;
 	}
@@ -90,19 +97,28 @@ void Player::update()
 		{
 			// Cache the variable so we can deleate it later
 		   // We can't delete it after erasing from the vector (leaked pointer)
-		   Bullet* bulletToErase = bullets[i];
-		   bullets.erase(bullets.begin() + i);
-		   delete bulletToErase;
-		   
-		   
+			Bullet* bulletToErase = bullets[i];
+			bullets.erase(bullets.begin() + i);
+			delete bulletToErase;
 
-		   // We can't mutate (change) our vector while looping inside it
-		  // this might crash on the next loop iteration
-		 // To encounter that, we only delete one bullet per frame
-		   break;
+
+
+			// We can't mutate (change) our vector while looping inside it
+		   // this might crash on the next loop iteration
+		  // To encounter that, we only delete one bullet per frame
+			break;
+		}
+	}
 }
 
-	void Player::draw();
-{
-	blit(texture, x, y);
-}
+	
+
+	int Player::getPositionX()
+	{
+		return x;
+	}
+
+	int Player::getPositionY()
+	{
+		return y;
+	}

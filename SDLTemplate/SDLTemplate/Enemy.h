@@ -5,32 +5,37 @@
 #include "SoundManager.h"
 #include "Bullet.h"
 #include <vector>
+#include "util.h"
+#include "Player.h"
 
-class Player : public GameObject
+class Enemy : public GameObject
 {
 public:
-	~Player();
+	Enemy();
+	~Enemy();
 	void start();
 	void update();
 	void draw();
-
-
-	int getPositionX();
-	int getPositionY();
+	void setPlayerTarget(Player* player);
 private:
 	int x;
 	int y;
+	float directionX;
+	float directionY;
 	int width;
 	int height;
 
 	SDL_Texture* texture;
 	Mix_Chunk* sound;
+	Player* PlayerTarget;
 
 	int speed;
 	int acceleration;
 	int defaultSpeed;
 	float reloadTime;
 	float currentReloadTime;
+	float directionChangeTime;
+	float currentDirectionChangeTime;
 	std::vector<Bullet*> bullets;
 };
 

@@ -6,6 +6,10 @@ GameScene::GameScene()
 	// Register and add game objects on constructor
 	player = new Player();
 	this->addGameObject(player);
+
+	enemy = new Enemy();
+	this->addGameObject(enemy);
+	enemy->setPlayerTarget(player);
 }
 
 GameScene::~GameScene()
