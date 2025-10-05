@@ -1,4 +1,4 @@
-#include "Enemy.h"
+﻿#include "Enemy.h"
 #include "Scene.h"
 
 
@@ -14,87 +14,89 @@ Enemy::~Enemy()
 
 void Enemy::start()
 {
-	// Load Texture
 	texture = loadTexture("gfx/enemy.png");
 
-
-	// Initialize to avoid garbage values
 	directionX = -1;
 	directionY = 1;
-	x = 1000;
-	y = 500;
+
 	width = 0;
 	height = 0;
 
-	defaultSpeed = 2;
-	acceleration = 5;
-	speed = defaultSpeed; 
-	reloadTime = 60;
+	speed = 2;
+
+	reloadTime = 60; // Reload time of 60 frames, or 1 second
 	currentReloadTime = 0;
-	directionChangeTime = (rand() % 300) + 180;
+
+	directionChangeTime = (rand() % 300) + 180; // Direction change time of 3-8 seconds
 	currentDirectionChangeTime = 0;
 
-	// Query the texture to set our width and height
 	SDL_QueryTexture(texture, NULL, NULL, &width, &height);
 
 	sound = SoundManager::loadSound("sound/334227__jradcoolness__laser.ogg");
+	sound->volume = 64;
 }
 
 void Enemy::update()
 {
+	// Move
 	x += directionX * speed;
 	y += directionY * speed;
 
+	// Basic AI, switch directions every X seconds
 	if (currentDirectionChangeTime > 0)
 		currentDirectionChangeTime--;
 
 	if (currentDirectionChangeTime == 0)
 	{
+		// Flip directions
 		directionY = -directionY;
 		currentDirectionChangeTime = directionChangeTime;
 	}
 
-	if (currentReloadTime > 0);
-	currentReloadTime--;
+	// Decrement the enemy's reload timer
+	if (currentReloadTime > 0)
+		currentReloadTime--;
 
-	if (currentReloadTime == 0)
-
+	// Only fire when our reload timer is ready
+	if (currentReloadTime <= 0)
 	{
+		SoundManager::playSound(sound);
+
 		float dx = -1;
 		float dy = 0;
 
-		calcSlope(PlayerTarget->getPositionX(), PlayerTarget->getPositionY(), x, y, &dx, &dy);
+		calcSlope(playerTarget->getPositionX(), playerTarget->getPositionY(), x, y, &dx, &dy);
 
-		SoundManager::playSound(sound);
-		Bullet* bullet = new Bullet(x + width, y - 2 + height / 2, -1, 0, 10);
-		bullets.push_back(bullet);
+		Bullet* bullet = new Bullet(
+			x, y - 2 + height / 2,
+			dx, dy, 10,
+			Side::ENEMY_SIDE);
 		getScene()->addGameObject(bullet);
-		
 
+		bullets.push_back(bullet);
+
+		// After firing, reset our reload timer
 		currentReloadTime = reloadTime;
 	}
 
-	// Memory manage our bullets. When they go off screen, deleate them
+	// Memory manage our bullets. When they go off screen, delete them
 	for (int i = 0; i < bullets.size(); i++)
 	{
 		if (bullets[i]->getPositionX() < 0)
 		{
-			// Cache the variable so we can deleate it later
-		   // We can't delete it after erasing from the vector (leaked pointer)
+			// Cache the variable so we can delete it later [same as the linked list quiz in BASPRG2, where you put it in a variable and erase it]
+			// We can�t delete it after erasing from the vector (leaked pointer)
 			Bullet* bulletToErase = bullets[i];
 			bullets.erase(bullets.begin() + i);
 			delete bulletToErase;
-
-
-
-			// We can't mutate (change) our vector while looping inside it
-		   // this might crash on the next loop iteration
-		  // To encounter that, we only delete one bullet per frame
-			break;
 		}
+
+		// We can�t mutate (change) our vector while looping inside it
+		// this might crash on the next loop iteration
+		// To counter that, we only delete one bullet per frame
+		break;
 	}
 }
-
 
 void Enemy::draw()
 {
@@ -103,5 +105,31 @@ void Enemy::draw()
 
 void Enemy::setPlayerTarget(Player* player)
 {
-	PlayerTarget = player;
+	playerTarget = player;
+}
+
+void Enemy::setPosition(int x, int y)
+{
+	this->x = x;
+	this->y = y;
+}
+
+int Enemy::getPositionX()
+{
+	return x;
+}
+
+int Enemy::getPositionY()
+{
+	return y;
+}
+
+int Enemy::getWidth()
+{
+	return width;
+}
+
+int Enemy::getHeight()
+{
+	return height;
 }

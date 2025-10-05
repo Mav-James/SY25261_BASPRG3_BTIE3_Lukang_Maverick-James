@@ -14,23 +14,29 @@ public:
 	void update();
 	void draw();
 
-
 	int getPositionX();
 	int getPositionY();
+	int getWidth();
+	int getHeight();
+
+	bool getIsAlive();
+	void doDeath();
 private:
 	int x;
 	int y;
-	int width;
 	int height;
+	int width;
 
 	SDL_Texture* texture;
-	Mix_Chunk* sound;
 
-	int speed;
-	int acceleration;
-	int defaultSpeed;
+	float speed;
+
 	float reloadTime;
 	float currentReloadTime;
+
+	Mix_Chunk* sound;
 	std::vector<Bullet*> bullets;
+
+	bool isAlive;
 };
 

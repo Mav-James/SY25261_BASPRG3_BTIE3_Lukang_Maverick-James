@@ -3,56 +3,71 @@
 
 Player::~Player()
 {
-	// Memory manage our bullets. Deleate all bullets on player deletetion/death
 	for (int i = 0; i < bullets.size(); i++)
 	{
-		delete bullets[i];
+		if (bullets[i]->getPositionX() > SCREEN_WIDTH)
+		{
+			// Cache the variable so we can delete it later [same as the linked list quiz in BASPRG2, where you put it in a variable and erase it]
+			// We can?t delete it after erasing from the vector (leaked pointer)
+			Bullet* bulletToErase = bullets[i];
+			bullets.erase(bullets.begin() + i);
+			delete bulletToErase;
+		}
+
+		// We can?t mutate (change) our vector while looping inside it
+		// this might crash on the next loop iteration
+		// To counter that, we only delete one bullet per frame
+		break;
 	}
+
 	bullets.clear();
 }
 
 void Player::start()
 {
-	// Load Texture
 	texture = loadTexture("gfx/player.png");
 
-
-	// Initialize to avoid garbage values
-	x = 100;
 	y = 100;
+	x = 100;
+
 	width = 0;
 	height = 0;
 
-	defaultSpeed = 2;
-	acceleration = 5;
-	speed = defaultSpeed;
-	reloadTime = 8;
-	currentReloadTime = 0;
+	speed = 4;
 
-	// Query the texture to set our width and height
 	SDL_QueryTexture(texture, NULL, NULL, &width, &height);
 
 	sound = SoundManager::loadSound("sound/334227__jradcoolness__laser.ogg");
+
+	reloadTime = 4; // Reload time of 8 frames, or 0.13 seconds
+	currentReloadTime = 0;
+
+	isAlive = true;
 }
-
-void Player::draw()
-{
-	blit(texture, x, y);
-}
-
-
 
 void Player::update()
 {
-	if (app.keyboard[SDL_SCANCODE_LSHIFT])
+	// Memory manage our bullets. When they go off screen, delete them
+	for (int i = 0; i < bullets.size(); i++)
 	{
-		speed = acceleration;
+		if (bullets[i]->getPositionX() > SCREEN_WIDTH)
+		{
+			// Cache the variable so we can delete it later [same as the linked list quiz in BASPRG2, where you put it in a variable and erase it]
+			// We can?t delete it after erasing from the vector (leaked pointer)
+			Bullet* bulletToErase = bullets[i];
+			bullets.erase(bullets.begin() + i);
+			delete bulletToErase;
+		}
 
+		// We can?t mutate (change) our vector while looping inside it
+		// this might crash on the next loop iteration
+		// To counter that, we only delete one bullet per frame
+		break;
 	}
 
-	if (app.keyboard[SDL_SCANCODE_BACKSPACE])
+	if (!isAlive)
 	{
-		speed = defaultSpeed;
+		return;
 	}
 
 	if (app.keyboard[SDL_SCANCODE_W])
@@ -75,50 +90,62 @@ void Player::update()
 		x += speed;
 	}
 
-	// Decrement the player's reload timer
-	if (currentReloadTime > 0);
-	    currentReloadTime --;
+	if (currentReloadTime > 0)
+		currentReloadTime--;
 
-
-	if (app.keyboard[SDL_SCANCODE_F])
+	if (app.keyboard[SDL_SCANCODE_F] && currentReloadTime <= 0)
 	{
 		SoundManager::playSound(sound);
-		Bullet* bullet = new Bullet(x + width, y - 2 + height / 2, 1, 0, 10);
-		bullets.push_back(bullet);
+
+		Bullet* bullet = new Bullet(
+			x + width,
+			y - 2 + height / 2,
+			1, 0, 10,
+			Side::PLAYER_SIDE);
 		getScene()->addGameObject(bullet);
-		
+
+		bullets.push_back(bullet);
 
 		currentReloadTime = reloadTime;
 	}
-	// Memory manage our bullets. When they go off screen, deleate them
-	for (int i = 0; i < bullets.size(); i++)
-	{
-		if (bullets[i]->getPositionX() > SCREEN_WIDTH)
-		{
-			// Cache the variable so we can deleate it later
-		   // We can't delete it after erasing from the vector (leaked pointer)
-			Bullet* bulletToErase = bullets[i];
-			bullets.erase(bullets.begin() + i);
-			delete bulletToErase;
-
-
-
-			// We can't mutate (change) our vector while looping inside it
-		   // this might crash on the next loop iteration
-		  // To encounter that, we only delete one bullet per frame
-			break;
-		}
-	}
 }
 
-	
-
-	int Player::getPositionX()
+void Player::draw()
+{
+	if (!isAlive)
 	{
-		return x;
+		return;
 	}
 
-	int Player::getPositionY()
-	{
-		return y;
-	}
+	blitScale(texture, x, y, &width, &height, 2);
+}
+
+int Player::getPositionX()
+{
+	return x;
+}
+
+int Player::getPositionY()
+{
+	return y;
+}
+
+int Player::getWidth()
+{
+	return width;
+}
+
+int Player::getHeight()
+{
+	return height;
+}
+
+bool Player::getIsAlive()
+{
+	return isAlive;
+}
+
+void Player::doDeath()
+{
+	isAlive = false;
+}
