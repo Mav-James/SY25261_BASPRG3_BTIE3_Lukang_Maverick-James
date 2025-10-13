@@ -6,37 +6,27 @@
 #include "Bullet.h"
 #include <vector>
 
-class Player : public GameObject
+
+class Player :
+
+	public GameObject
 {
 public:
 	~Player();
 	void start();
 	void update();
 	void draw();
-
-	int getPositionX();
-	int getPositionY();
-	int getWidth();
-	int getHeight();
-
-	bool getIsAlive();
-	void doDeath();
 private:
+	SDL_Texture* texture;
+	Mix_Chunk* sound;
 	int x;
 	int y;
-	int height;
 	int width;
-
-	SDL_Texture* texture;
-
-	float speed;
-
+	int height;
+	int speed;
 	float reloadTime;
 	float currentReloadTime;
-
-	Mix_Chunk* sound;
 	std::vector<Bullet*> bullets;
-
-	bool isAlive;
 };
+
 
