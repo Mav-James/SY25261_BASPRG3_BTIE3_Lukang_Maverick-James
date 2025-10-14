@@ -3,14 +3,17 @@
 GameScene::GameScene()
 {
 	// Register and add game objects on constructor
+<<<<<<< HEAD
 	player = new Player();
 	this->addGameObject(player);
 
+=======
+>>>>>>> 3f8d0e749e16566bf24e8943dae44e0aea0b1e03
 }
 
 GameScene::~GameScene()
 {
-	delete player;
+
 }
 
 void GameScene::start()
