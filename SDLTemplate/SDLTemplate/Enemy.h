@@ -6,37 +6,44 @@
 #include "Bullet.h"
 #include "Scene.h"
 #include <vector>
+#include "util.h"
+#include "Player.h"
 
-class Player : public GameObject
+class Enemy : public GameObject
 {
 public:
-	~Player();
+	Enemy();
+	~Enemy();
 	void start();
 	void update();
 	void draw();
+
+	void setPlayerTarget(Player* player);
+	void setPosition(int x, int y);
 
 	int getPositionX();
 	int getPositionY();
 	int getWidth();
 	int getHeight();
 
-	bool getIsAlive();
-	void doDeath();
 private:
 	int x;
 	int y;
+	float directionX;
+	float directionY;
 	int height;
 	int width;
 
-	SDL_Texture* texture;
-
 	float speed;
+
+	SDL_Texture* texture;
+	Mix_Chunk* sound;
 
 	float reloadTime;
 	float currentReloadTime;
+	float directionChangeTime;
+	float currentDirectionChangeTime;
 
-	Mix_Chunk* sound;
 	std::vector<Bullet*> bullets;
-
-	bool isAlive;
+	Player* playerTarget;
 };

@@ -1,10 +1,10 @@
 #pragma once
 #include "Scene.h"
 #include "GameObject.h"
-<<<<<<< HEAD
 #include "Player.h"
-=======
->>>>>>> 3f8d0e749e16566bf24e8943dae44e0aea0b1e03
+#include "Enemy.h"
+#include <vector>
+#include "text.h"
 
 class GameScene : public Scene
 {
@@ -15,9 +15,19 @@ public:
 	void draw();
 	void update();
 private:
-<<<<<<< HEAD
 	Player* player;
-=======
->>>>>>> 3f8d0e749e16566bf24e8943dae44e0aea0b1e03
-};
+	Enemy* enemy;
 
+	// Enemy spawning logic
+	float spawnTime;
+	float currentSpawnTimer;
+	std::vector<Enemy*> spawnedEnemies;
+
+	void spawnEnemies();
+	void doSpawnLogic();
+
+	void doCollisionLogic();
+	void despawnEnemy(Enemy* enemy);
+
+	int points;
+};
