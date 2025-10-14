@@ -5,6 +5,7 @@
 #include "Enemy.h"
 #include <vector>
 #include "text.h"
+#include "PowerUp.h"
 
 class GameScene : public Scene
 {
@@ -17,6 +18,14 @@ public:
 private:
 	Player* player;
 	Enemy* enemy;
+
+	//PowerUp
+	float powerUpSpawnTimer;
+	std::vector<PowerUp*> spawnedPowerUps;
+
+	void spawnPowerUp();
+	void doPowerUpSpawnLogic();
+	void doPowerUpCollision();
 
 	// Enemy spawning logic
 	float spawnTime;

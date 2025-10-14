@@ -28,6 +28,9 @@ void GameScene::start()
 	initFonts();
 
 	points = 0;
+
+	powerUpSpawnTimer = 300; // spawn every 5 seconds
+
 }
 
 void GameScene::draw()
@@ -50,6 +53,49 @@ void GameScene::update()
 
 	doSpawnLogic();
 	doCollisionLogic();
+	doPowerUpSpawnLogic();
+	doPowerUpCollision();
+}
+
+void GameScene::spawnPowerUp()
+{
+	int randomX = rand() % (SCREEN_WIDTH - 64);
+	PowerUp* powerUp = new PowerUp(randomX, 0);
+	addGameObject(powerUp);
+	spawnedPowerUps.push_back(powerUp);
+}
+
+void GameScene::doPowerUpSpawnLogic()
+{
+	if (powerUpSpawnTimer > 0)
+		powerUpSpawnTimer--;
+	else
+	{
+		spawnPowerUp();
+		powerUpSpawnTimer = 300 + rand() % 100; // random delay
+	}
+}
+
+void GameScene::doPowerUpCollision()
+{
+	for (int i = 0; i < spawnedPowerUps.size(); i++)
+	{
+		PowerUp* p = spawnedPowerUps[i];
+		int collision = checkCollision(
+			player->getPositionX(), player->getPositionY(), player->getWidth(), player->getHeight(),
+			p->getPositionX(), p->getPositionY(), p->getWidth(), p->getHeight()
+		);
+
+		if (collision == 1)
+		{
+			player->increasePowerLevel();
+			std::cout << "Power-up collected! Level: " << player->getPowerLevel() << std::endl;
+
+			spawnedPowerUps.erase(spawnedPowerUps.begin() + i);
+			delete p;
+			break;
+		}
+	}
 }
 
 void GameScene::spawnEnemies()

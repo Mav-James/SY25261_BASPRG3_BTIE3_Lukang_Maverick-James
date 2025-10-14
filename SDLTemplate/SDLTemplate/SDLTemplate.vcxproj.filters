@@ -12,6 +12,7 @@
     <ClCompile Include="text.cpp" />
     <ClCompile Include="util.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="PowerUp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app.h" />
@@ -28,5 +29,6 @@
     <ClInclude Include="text.h" />
     <ClInclude Include="util.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="PowerUp.h" />
   </ItemGroup>
 </Project>

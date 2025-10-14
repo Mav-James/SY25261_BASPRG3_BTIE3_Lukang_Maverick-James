@@ -14,6 +14,8 @@ public:
 	void start();
 	void update();
 	void draw();
+	void increasePowerlevel();
+	int getPowerlevel();
 
 	int getPositionX();
 	int getPositionY();
@@ -22,11 +24,14 @@ public:
 
 	bool getIsAlive();
 	void doDeath();
+	void increasePowerLevel();
+	int getPowerLevel();
 private:
 	int x;
 	int y;
 	int height;
 	int width;
+	int powerlevel();
 
 	SDL_Texture* texture;
 
@@ -39,4 +44,5 @@ private:
 	std::vector<Bullet*> bullets;
 
 	bool isAlive;
+
 };

@@ -1,4 +1,8 @@
 ﻿#include "Player.h"
+#include "Player.h"
+#include "Player.h"
+#include "Player.h"
+
 
 Player::~Player()
 {
@@ -33,6 +37,8 @@ void Player::start()
 	height = 0;
 
 	speed = 4;
+
+	powerlevel = 1;
 
 	SDL_QueryTexture(texture, NULL, NULL, &width, &height);
 
@@ -96,17 +102,29 @@ void Player::update()
 	{
 		SoundManager::playSound(sound);
 
-		Bullet* bullet = new Bullet(
-			x + width,
-			y - 2 + height / 2,
-			1, 0, 10,
-			Side::PLAYER_SIDE);
+		
+		Bullet* bullet = new Bullet(x + width, y - 2 + height / 2, 1, 0, 10, Side::PLAYER_SIDE);
 		getScene()->addGameObject(bullet);
-
 		bullets.push_back(bullet);
+
+		
+		if (powerLevel >= 2)
+		{
+			Bullet* bulletUp = new Bullet(x + width, y - 10, 1, -0.1, 10, Side::PLAYER_SIDE);
+			getScene()->addGameObject(bulletUp);
+			bullets.push_back(bulletUp);
+		}
+
+		if (powerLevel >= 3)
+		{
+			Bullet* bulletDown = new Bullet(x + width, y + 10, 1, 0.1, 10, Side::PLAYER_SIDE);
+			getScene()->addGameObject(bulletDown);
+			bullets.push_back(bulletDown);
+		}
 
 		currentReloadTime = reloadTime;
 	}
+
 }
 
 void Player::draw()
@@ -117,6 +135,17 @@ void Player::draw()
 	}
 
 	blitScale(texture, x, y, &width, &height, 2);
+}
+
+void Player::increasePowerlevel()
+{
+	if (powerLevel < 3)
+		powerlevel++;
+}
+
+int Player::getPowerlevel()
+{
+	return powerlevel;
 }
 
 int Player::getPositionX()
@@ -147,4 +176,20 @@ bool Player::getIsAlive()
 void Player::doDeath()
 {
 	isAlive = false;
+}
+
+void Player::increasePowerLevel()
+{
+	if (powerLevel < 3) // limit max to 3 lines of fire
+		powerLevel++;
+}
+
+int Player::getPowerLevel()
+{
+	return 0;
+}
+
+int Player::powerlevel()
+{
+	return powerlevel;
 }
