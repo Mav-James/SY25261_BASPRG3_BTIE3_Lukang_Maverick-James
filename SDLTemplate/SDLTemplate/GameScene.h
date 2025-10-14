@@ -24,8 +24,8 @@ private:
 	std::vector<PowerUp*> spawnedPowerUps;
 
 	void spawnPowerUp();
-	void doPowerUpSpawnLogic();
-	void doPowerUpCollision();
+	void PowerUpSpawnLogic();
+	void PowerUpCollision();
 
 	// Enemy spawning logic
 	float spawnTime;

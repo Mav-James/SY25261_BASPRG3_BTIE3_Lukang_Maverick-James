@@ -53,8 +53,8 @@ void GameScene::update()
 
 	doSpawnLogic();
 	doCollisionLogic();
-	doPowerUpSpawnLogic();
-	doPowerUpCollision();
+	PowerUpSpawnLogic();
+	PowerUpCollision();
 }
 
 void GameScene::spawnPowerUp()
@@ -65,7 +65,7 @@ void GameScene::spawnPowerUp()
 	spawnedPowerUps.push_back(powerUp);
 }
 
-void GameScene::doPowerUpSpawnLogic()
+void GameScene::PowerUpSpawnLogic()
 {
 	if (powerUpSpawnTimer > 0)
 		powerUpSpawnTimer--;
@@ -76,7 +76,7 @@ void GameScene::doPowerUpSpawnLogic()
 	}
 }
 
-void GameScene::doPowerUpCollision()
+void GameScene::PowerUpCollision()
 {
 	for (int i = 0; i < spawnedPowerUps.size(); i++)
 	{
