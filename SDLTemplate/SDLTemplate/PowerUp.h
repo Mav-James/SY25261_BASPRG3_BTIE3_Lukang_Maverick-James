@@ -3,6 +3,7 @@
 #include "common.h"
 #include "draw.h"
 #include <SDL.h>
+#include "Player.h"
 
 class PowerUp : public GameObject
 {

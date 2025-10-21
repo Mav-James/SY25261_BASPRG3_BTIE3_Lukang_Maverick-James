@@ -5,11 +5,19 @@ GameScene::GameScene()
 	// Register and add game objects on constructor
 	player = new Player();
 	this->addGameObject(player);
+
+	boss =	NULL;
+	bossSpawned = false;
 }
 
 GameScene::~GameScene()
 {
 	delete player;
+	if (boss != NULL)
+	{
+		delete boss;
+		boss = NULL;
+	}
 }
 
 void GameScene::start()
@@ -31,6 +39,8 @@ void GameScene::start()
 
 	powerUpSpawnTimer = 300; // spawn every 5 seconds
 
+
+
 }
 
 void GameScene::draw()
@@ -45,6 +55,13 @@ void GameScene::draw()
 	{
 		drawText(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 255, 0, 0, TEXT_CENTER, "GAME OVER!");
 	}
+
+	// Draws boss if getting spawned
+
+	if (bossSpawned && boss != NULL)
+	{
+		boss->draw(app.renderer);
+	}
 }
 
 void GameScene::update()
@@ -55,6 +72,18 @@ void GameScene::update()
 	doCollisionLogic();
 	PowerUpSpawnLogic();
 	PowerUpCollision();
+
+	//Spawns boss when it reaches a specific amount of points
+	if (points >= 2000 && !bossSpawned)
+	{
+		spawnBoss();
+	}
+
+	
+	if (bossSpawned && boss != NULL)
+	{
+		boss->update();
+	}
 }
 
 void GameScene::spawnPowerUp()
@@ -190,4 +219,12 @@ void GameScene::despawnEnemy(Enemy* enemy)
 		spawnedEnemies.erase(spawnedEnemies.begin() + index);
 		delete enemy;
 	}
+}
+
+void GameScene::spawnBoss()
+{
+	boss = new Boss();
+	boss->start(app.renderer);
+	boss->setPosition(500, 50); // Spawn near top of screen
+	bossSpawned = true;
 }

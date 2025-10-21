@@ -6,6 +6,7 @@
 #include <vector>
 #include "text.h"
 #include "PowerUp.h"
+#include "Boss.h"
 
 class GameScene : public Scene
 {
@@ -18,6 +19,7 @@ public:
 private:
 	Player* player;
 	Enemy* enemy;
+	Boss* boss;
 
 	//PowerUp
 	float powerUpSpawnTimer;
@@ -37,6 +39,10 @@ private:
 
 	void doCollisionLogic();
 	void despawnEnemy(Enemy* enemy);
+
+	//Boss spawn logic
+	bool bossSpawned;
+	void spawnBoss();
 
 	int points;
 };
